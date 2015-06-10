@@ -1,6 +1,7 @@
 package com.springboot.main.web.api;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,14 +42,23 @@ public class GreetingController {
 		save(g2);
 	}
 	
-	@RequestMapping(value="/api/greetings/{id}",
+	@RequestMapping(value="/api/greetings",
 			method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Greeting> getGreeting(@PathVariable("id") BigInteger id){
-		Greeting greeting = greetingMap.get(id);
+	public ResponseEntity<Collection<Greeting>> getGreeting(){
+		Collection<Greeting> greetings = greetingMap.values();
+		return new ResponseEntity <Collection<Greeting>> (greetings, 
+				HttpStatus.OK);
+	}
+	
+	@RequestMapping( value = "/api/greetings/{id}")
+	public ResponseEntity<Greeting> getGreeting(@PathVariable("id") BigInteger id) {
+		
+		Greeting greeting= greetingMap.get(id);
 		if (greeting == null) {
 			return new ResponseEntity<Greeting>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity <Greeting> (greeting, HttpStatus.OK);
+		return new ResponseEntity <Greeting> (greeting, 
+				HttpStatus.OK);
 	}
 }
