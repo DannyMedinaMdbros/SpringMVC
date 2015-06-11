@@ -44,6 +44,14 @@ public class GreetingController {
 		return greeting;
 	}
 	
+	private static boolean delete(BigInteger id) {
+		Greeting deletedGreeting = greetingMap.remove(id);
+		if (deletedGreeting == null) {
+			return false;
+		}
+		return true;
+	}
+	
 	static{
 		Greeting g1 = new Greeting();
 		g1.setText("Helllo World");
@@ -63,7 +71,9 @@ public class GreetingController {
 				HttpStatus.OK);
 	}
 	
-	@RequestMapping( value = "/api/greetings/{id}")
+	@RequestMapping( value = "/api/greetings/{id}",
+			method=RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Greeting> getGreeting(@PathVariable("id") BigInteger id) {
 		
 		Greeting greeting= greetingMap.get(id);
@@ -93,5 +103,15 @@ public class GreetingController {
 			return new ResponseEntity<Greeting>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<Greeting>(updatedGreeting,HttpStatus.OK);
+	}
+	@RequestMapping(value = "/api/greetings/{id}", 
+			method = RequestMethod.DELETE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Greeting> deleteGreeting(@PathVariable("id") BigInteger id, @RequestBody Greeting greeting) {
+		boolean deleted = delete(id);
+		if (!deleted) {
+			return new ResponseEntity<Greeting>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<Greeting>(HttpStatus.NO_CONTENT);
 	}
 }
