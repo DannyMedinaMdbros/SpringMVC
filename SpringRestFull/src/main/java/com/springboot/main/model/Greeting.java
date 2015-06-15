@@ -1,7 +1,5 @@
 package com.springboot.main.model;
 
-import java.math.BigInteger;
-
 public class Greeting {
 	private Long id;
 	private String text;
