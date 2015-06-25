@@ -1,6 +1,14 @@
 package com.springboot.main.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class Greeting {
+	
+	@Id
+	@GeneratedValue
 	private Long id;
 	private String text;
 	public Greeting() {
