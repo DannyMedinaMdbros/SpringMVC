@@ -11,11 +11,14 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.main.model.Greeting;
 import com.springboot.main.repository.GreetingRepository;
 
 @Service
+@Transactional
 public class GreetingServiceBean implements GreetingService {
 	
 	@Autowired
@@ -36,6 +39,7 @@ public class GreetingServiceBean implements GreetingService {
 
 	@Override
 	@CachePut(value = "gretings", key = "#result.id")
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public Greeting create(Greeting greeting) {
 		if(greeting.getId() != null){
 			//Cannot create Greeting with specified ID value
@@ -43,11 +47,17 @@ public class GreetingServiceBean implements GreetingService {
 		}
 		
 		Greeting savedGreeting = greetingRepository.save(greeting);
+		
+		//Illustrate the rollback
+		if (savedGreeting.getId() == 4L) {
+			throw new RuntimeException("Roll me back");
+		}
 		return savedGreeting;
 	}
 
 	@Override
 	@CachePut(value = "gretings", key = "#greting.id")
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public Greeting update(Greeting greeting) {
 		Greeting greetingPersisted = findOne(greeting.getId());
 		if (greetingPersisted == null) {
@@ -61,6 +71,7 @@ public class GreetingServiceBean implements GreetingService {
 
 	@Override
 	@CacheEvict(value= "gretings", key="#id")
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void delete(Long id) {
 		greetingRepository.delete(id);;
 	}
