@@ -31,14 +31,14 @@ public class GreetingServiceBean implements GreetingService {
 	}
 
 	@Override
-	@Cacheable(value= "gretings", key="#id")
+	@Cacheable(value= "greetings", key="#id")
 	public Greeting findOne(Long id) {
 		Greeting greeting= greetingRepository.findOne(id);
 		return greeting;
 	}
 
 	@Override
-	@CachePut(value = "gretings", key = "#result.id")
+	@CachePut(value = "greetings", key = "#result.id")
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public Greeting create(Greeting greeting) {
 		if(greeting.getId() != null){
@@ -56,7 +56,7 @@ public class GreetingServiceBean implements GreetingService {
 	}
 
 	@Override
-	@CachePut(value = "gretings", key = "#greting.id")
+	@CachePut(value = "greetings", key = "#greting.id")
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public Greeting update(Greeting greeting) {
 		Greeting greetingPersisted = findOne(greeting.getId());
@@ -70,14 +70,14 @@ public class GreetingServiceBean implements GreetingService {
 	}
 
 	@Override
-	@CacheEvict(value= "gretings", key="#id")
+	@CacheEvict(value= "greetings", key="#id")
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
 	public void delete(Long id) {
 		greetingRepository.delete(id);;
 	}
 	
 	@Override
-	@CacheEvict(value= "gretings", allEntries = true)
+	@CacheEvict(value= "greetings", allEntries = true)
 	public void evictCache() {
 		// TODO Auto-generated method stub
 
