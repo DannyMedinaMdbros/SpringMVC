@@ -24,7 +24,6 @@ public class SpringRestFullApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpringRestFullApplication.class, args);
     }
-    
     @Bean
     public CacheManager cachemanager(){
     	GuavaCacheManager cacheManager = new GuavaCacheManager("greetings");
